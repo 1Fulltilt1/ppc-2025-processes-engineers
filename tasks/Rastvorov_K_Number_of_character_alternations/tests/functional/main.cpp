@@ -71,7 +71,6 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   bool CheckTestOutputData(OutType &output_data) final {
     int rank = 0;
 
-    // проверяем результат только на ранге 0
     if (rank != 0) {
       return true;
     }

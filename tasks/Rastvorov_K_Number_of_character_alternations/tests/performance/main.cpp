@@ -12,7 +12,7 @@ class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
   InType input_data_{};
 
   void SetUp() override {
-    input_data_ = 500000;
+    input_data_ = 10000000;
   }
 
   bool CheckTestOutputData(OutType &) final {
