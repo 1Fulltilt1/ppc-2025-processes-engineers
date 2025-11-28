@@ -12,5 +12,4 @@ using OutType = int;
 using TestType = std::tuple<int, std::string>;
 using BaseTask = ppc::task::Task<InType, OutType>;
 
-
 }  // namespace Rastvorov_K_Number_of_character_alternations

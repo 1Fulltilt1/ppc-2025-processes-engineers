@@ -15,9 +15,13 @@ class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
     input_data_ = 500000;
   }
 
-  bool CheckTestOutputData(OutType&) final { return true; }
+  bool CheckTestOutputData(OutType &) final {
+    return true;
+  }
 
-  InType GetTestInputData() final { return input_data_; }
+  InType GetTestInputData() final {
+    return input_data_;
+  }
 };
 
 TEST_P(RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, RunPerfModes) {
@@ -25,19 +29,14 @@ TEST_P(RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, RunPerfModes
 }
 
 const auto kAllPerfTasks =
-    ppc::util::MakeAllPerfTasks<InType,
-                                RastvorovKNumberAfCharacterAlternationsMPI,
-                                RastvorovKNumberAfCharacterAlternationsSEQ>(
-        PPC_SETTINGS_example_processes);
+    ppc::util::MakeAllPerfTasks<InType, RastvorovKNumberAfCharacterAlternationsMPI,
+                                RastvorovKNumberAfCharacterAlternationsSEQ>(PPC_SETTINGS_example_processes);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
-const auto kPerfTestName =
-    RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName;
+const auto kPerfTestName = RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName;
 
-INSTANTIATE_TEST_SUITE_P(RunModeTests,
-                         RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses,
-                         kGtestValues,
+INSTANTIATE_TEST_SUITE_P(RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
                          kPerfTestName);
 
 }  // namespace Rastvorov_K_Number_of_character_alternations
