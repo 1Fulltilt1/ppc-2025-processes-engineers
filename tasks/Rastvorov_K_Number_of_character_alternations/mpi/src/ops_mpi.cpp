@@ -50,84 +50,42 @@ bool RastvorovKNumberAfCharacterAlternationsMPI::PreProcessingImpl() {
 }
 
 bool RastvorovKNumberAfCharacterAlternationsMPI::RunImpl() {
-  int rank = 0, size = 1;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   const InType n = GetInput();
-  if (n <= 0) {
-    if (rank == 0) {
-      GetOutput() = 0;
-    }
-    return true;
-  }
 
-  const std::size_t total = static_cast<std::size_t>(n);
-
-  std::size_t base = total / static_cast<std::size_t>(size);
-  std::size_t rem = total % static_cast<std::size_t>(size);
-
-  std::size_t begin = 0, end = 0;
-  if (static_cast<std::size_t>(rank) < rem) {
-    begin = static_cast<std::size_t>(rank) * (base + 1);
-    end = begin + base + 1;
-  } else {
-    begin = rem * (base + 1) + (static_cast<std::size_t>(rank) - rem) * base;
-    end = begin + base;
-  }
-
-  int local_count = 0;
-  int first_sign = 0;
-  int last_sign = 0;
-
-  for (std::size_t i = begin; i < end; ++i) {
-    int s = Sign(GetElement(i));
-    if (s == 0) {
-      continue;
-    }
-
-    if (first_sign == 0) {
-      first_sign = s;
-    }
-    if (last_sign != 0 && s != last_sign) {
-      ++local_count;
-    }
-    last_sign = s;
-  }
-
-  int local_info[3] = {local_count, first_sign, last_sign};
-  std::vector<int> all_info;
+  int result = 0;
 
   if (rank == 0) {
-    all_info.resize(static_cast<std::size_t>(size) * 3);
-  }
+    if (n <= 0) {
+      result = 0;
+    } else {
+      int local_count = 0;
+      int last_sign = 0;
 
-  MPI_Gather(local_info, 3, MPI_INT, rank == 0 ? all_info.data() : nullptr, 3, MPI_INT, 0, MPI_COMM_WORLD);
-
-  if (rank == 0) {
-    int global_count = 0;
-    int prev_sign = 0;
-
-    for (int p = 0; p < size; ++p) {
-      int lc = all_info[3 * p + 0];
-      int fs = all_info[3 * p + 1];
-      int ls = all_info[3 * p + 2];
-
-      if (prev_sign != 0 && fs != 0 && fs != prev_sign) {
-        ++global_count;
+      for (std::size_t i = 0; i < static_cast<std::size_t>(n); ++i) {
+        int s = Sign(GetElement(i));
+        if (s == 0) {
+          continue;
+        }
+        if (last_sign != 0 && last_sign != s) {
+          ++local_count;
+        }
+        last_sign = s;
       }
 
-      global_count += lc;
-
-      if (ls != 0) {
-        prev_sign = ls;
-      }
+      result = local_count;
     }
-
-    GetOutput() = global_count;
+    GetOutput() = result;
   }
 
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Bcast(&result, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+  if (rank != 0) {
+    GetOutput() = result;
+  }
+
   return true;
 }
 
