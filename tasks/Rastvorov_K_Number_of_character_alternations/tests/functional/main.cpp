@@ -110,8 +110,8 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kTestName = RastvorovKRunFuncTestsProcesses::PrintFuncTestName<RastvorovKRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues,
-                         kTestName);  // NOLINT
+INSTANTIATE_TEST_SUITE_P(  // NOLINT
+    AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues, kTestName);
 
 }  // namespace
 

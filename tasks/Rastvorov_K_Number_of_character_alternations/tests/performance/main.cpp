@@ -35,7 +35,8 @@ const auto kAllPerfTasks =
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
-INSTANTIATE_TEST_SUITE_P(RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
-                         RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName);  // NOLINT
+INSTANTIATE_TEST_SUITE_P(  // NOLINT
+    RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
+    RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName);
 
 }  // namespace Rastvorov_K_Number_of_character_alternations
