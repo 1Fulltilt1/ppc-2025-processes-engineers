@@ -5,22 +5,23 @@
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
 #include "util/include/perf_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
     : public ppc::util::BaseRunPerfTests<InType, OutType> {
-  InType input_data_{};
+  InType input_data{};
 
   void SetUp() override {
-    input_data_ = 10000000;
+    input_data = 10000000;
   }
 
-  bool CheckTestOutputData(OutType &) final {
+  bool CheckTestOutputData(OutType &output_data) final {
+    (void)output_data;
     return true;
   }
 
   InType GetTestInputData() final {
-    return input_data_;
+    return input_data;
   }
 };
 
@@ -34,9 +35,7 @@ const auto kAllPerfTasks =
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
-const auto kPerfTestName = RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName;
-
 INSTANTIATE_TEST_SUITE_P(RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
-                         kPerfTestName);
+                         RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName);  // NOLINT
 
 }  // namespace Rastvorov_K_Number_of_character_alternations

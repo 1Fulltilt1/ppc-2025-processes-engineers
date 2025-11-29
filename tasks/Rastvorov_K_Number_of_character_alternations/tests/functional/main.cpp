@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
+#include <mpi.h>
 
 #include <array>
 #include <cstddef>
+#include <string>
 #include <tuple>
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
@@ -9,7 +11,7 @@
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
 #include "util/include/func_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 namespace {
 
@@ -37,7 +39,7 @@ inline int CountAlternations(std::size_t n) {
   int prev = 0;
   int cnt = 0;
   for (std::size_t i = 0; i < n; ++i) {
-    int s = Sign(GetElement(i));
+    const int s = Sign(GetElement(i));
     if (s == 0) {
       continue;
     }
@@ -58,27 +60,29 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   }
 
  protected:
-  InType input_data_{};
-  OutType expected_output_{};
+  InType input_data{};
+  OutType expected_output{};
 
   void SetUp() override {
-    TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(GetParam());
-    int n_int = std::get<0>(params);
-    input_data_ = static_cast<InType>(n_int);
-    expected_output_ = CountAlternations(static_cast<std::size_t>(n_int));
+    TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(
+        GetParam());  // NOLINT(misc-include-cleaner)
+    const int n_int = std::get<0>(params);
+    input_data = static_cast<InType>(n_int);
+    expected_output = CountAlternations(static_cast<std::size_t>(n_int));
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
     int rank = 0;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     if (rank != 0) {
       return true;
     }
-    return expected_output_ == output_data;
+    return expected_output == output_data;
   }
 
   InType GetTestInputData() final {
-    return input_data_;
+    return input_data;
   }
 };
 
@@ -102,7 +106,8 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kTestName = RastvorovKRunFuncTestsProcesses::PrintFuncTestName<RastvorovKRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues, kTestName);
+INSTANTIATE_TEST_SUITE_P(AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues,
+                         kTestName);  // NOLINT
 
 }  // namespace
 

@@ -5,7 +5,7 @@
 
 #include "task/include/task.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 using InType = double;
 using OutType = int;

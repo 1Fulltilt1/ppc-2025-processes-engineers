@@ -3,9 +3,8 @@
 #include <cstddef>
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
-#include "util/include/util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 namespace {
 

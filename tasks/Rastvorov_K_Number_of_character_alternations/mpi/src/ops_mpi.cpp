@@ -3,15 +3,13 @@
 #include <mpi.h>
 
 #include <cstddef>
-#include <vector>
+#include <vector>  // NOLINT(misc-include-cleaner)
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
-#include "util/include/util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 namespace {
-
 inline int Sign(double x) {
   if (x > 0.0) {
     return 1;
@@ -30,6 +28,71 @@ inline double GetElement(std::size_t i) {
     return 1.0;
   }
   return -1.0;
+}
+
+struct LocalInfo {
+  int count{};
+  int first_sign{};
+  int last_sign{};
+};
+
+inline void ComputeRange(std::size_t rank, std::size_t size, std::size_t total, std::size_t *begin, std::size_t *end) {
+  const std::size_t base = total / size;
+  const std::size_t rem = total % size;
+
+  if (rank < rem) {
+    *begin = rank * (base + 1);
+    *end = *begin + base + 1;
+  } else {
+    *begin = rem * (base + 1) + (rank - rem) * base;
+    *end = *begin + base;
+  }
+}
+
+inline LocalInfo ProcessSegment(std::size_t begin, std::size_t end) {
+  LocalInfo info{};
+
+  for (std::size_t i = begin; i < end; ++i) {
+    const int s = Sign(GetElement(i));
+    if (s == 0) {
+      continue;
+    }
+
+    if (info.first_sign == 0) {
+      info.first_sign = s;
+    }
+    if (info.last_sign != 0 && info.last_sign != s) {
+      ++info.count;
+    }
+    info.last_sign = s;
+  }
+
+  return info;
+}
+
+inline int CombineGlobal(const std::vector<int> &all_info) {
+  int global_count = 0;
+  int prev_sign = 0;
+  const std::size_t size = all_info.size() / 3;
+
+  for (std::size_t p = 0; p < size; ++p) {
+    const int lc = all_info[3 * p + 0];
+    const int fs = all_info[3 * p + 1];
+    const int ls = all_info[3 * p + 2];
+
+    if (fs != 0) {
+      if (prev_sign != 0 && fs != prev_sign) {
+        ++global_count;
+      }
+      if (ls != 0) {
+        prev_sign = ls;
+      }
+    }
+
+    global_count += lc;
+  }
+
+  return global_count;
 }
 
 }  // namespace
@@ -51,41 +114,40 @@ bool RastvorovKNumberAfCharacterAlternationsMPI::PreProcessingImpl() {
 
 bool RastvorovKNumberAfCharacterAlternationsMPI::RunImpl() {
   int rank = 0;
+  int size = 1;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   const InType n = GetInput();
+  if (n <= 0) {
+    if (rank == 0) {
+      GetOutput() = 0;
+    }
+    return true;
+  }
 
-  int result = 0;
+  const std::size_t total = static_cast<std::size_t>(n);
+
+  std::size_t begin = 0;
+  std::size_t end = 0;
+  ComputeRange(static_cast<std::size_t>(rank), static_cast<std::size_t>(size), total, &begin, &end);
+
+  const LocalInfo local = ProcessSegment(begin, end);
+
+  int local_info[3] = {local.count, local.first_sign, local.last_sign};
+
+  std::vector<int> all_info;
+  if (rank == 0) {
+    all_info.resize(static_cast<std::size_t>(size) * 3);
+  }
+
+  MPI_Gather(local_info, 3, MPI_INT, rank == 0 ? all_info.data() : nullptr, 3, MPI_INT, 0, MPI_COMM_WORLD);
 
   if (rank == 0) {
-    if (n <= 0) {
-      result = 0;
-    } else {
-      int local_count = 0;
-      int last_sign = 0;
-
-      for (std::size_t i = 0; i < static_cast<std::size_t>(n); ++i) {
-        int s = Sign(GetElement(i));
-        if (s == 0) {
-          continue;
-        }
-        if (last_sign != 0 && last_sign != s) {
-          ++local_count;
-        }
-        last_sign = s;
-      }
-
-      result = local_count;
-    }
-    GetOutput() = result;
+    GetOutput() = CombineGlobal(all_info);
   }
 
-  MPI_Bcast(&result, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-  if (rank != 0) {
-    GetOutput() = result;
-  }
-
+  MPI_Barrier(MPI_COMM_WORLD);
   return true;
 }
 
