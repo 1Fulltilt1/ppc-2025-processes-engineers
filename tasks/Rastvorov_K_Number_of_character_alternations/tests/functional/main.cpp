@@ -63,13 +63,16 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   InType input_data{};
   OutType expected_output{};
 
-  void SetUp() override {
-    TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(
-        GetParam());  // NOLINT(misc-include-cleaner)
+      void SetUp() override {
+    // NOLINTNEXTLINE(misc-include-cleaner)
+    TestType params = std::get<static_cast<std::size_t>(
+        ppc::util::GTestParamIndex::kTestParams)>(GetParam());
     const int n_int = std::get<0>(params);
     input_data = static_cast<InType>(n_int);
     expected_output = CountAlternations(static_cast<std::size_t>(n_int));
   }
+
+
 
   bool CheckTestOutputData(OutType &output_data) final {
     int rank = 0;
