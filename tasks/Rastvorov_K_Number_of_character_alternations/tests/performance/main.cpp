@@ -9,10 +9,10 @@ namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-
 
 class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
     : public ppc::util::BaseRunPerfTests<InType, OutType> {
-  InType input_data{};
+  InType input_data_{};  //
 
   void SetUp() override {
-    input_data = 10000000;
+    input_data_ = 10000000;
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
@@ -21,7 +21,7 @@ class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
   }
 
   InType GetTestInputData() final {
-    return input_data;
+    return input_data_;
   }
 };
 
