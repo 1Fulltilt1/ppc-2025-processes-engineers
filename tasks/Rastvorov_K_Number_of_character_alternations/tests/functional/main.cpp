@@ -73,7 +73,12 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
 
   bool CheckTestOutputData(OutType &output_data) final {
     int rank = 0;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int initialized = 0;
+
+    MPI_Initialized(&initialized);
+    if (initialized != 0) {
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    }
 
     if (rank != 0) {
       return true;
