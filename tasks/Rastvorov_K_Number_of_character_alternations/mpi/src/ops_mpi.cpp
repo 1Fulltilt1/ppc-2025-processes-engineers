@@ -2,6 +2,7 @@
 
 #include <mpi.h>
 
+#include <array>
 #include <cstddef>
 #include <vector>  // NOLINT(misc-include-cleaner)
 
@@ -10,6 +11,7 @@
 namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
 
 namespace {
+
 inline int Sign(double x) {
   if (x > 0.0) {
     return 1;
@@ -44,7 +46,7 @@ inline void ComputeRange(std::size_t rank, std::size_t size, std::size_t total, 
     *begin = rank * (base + 1);
     *end = *begin + base + 1;
   } else {
-    *begin = rem * (base + 1) + (rank - rem) * base;
+    *begin = (rem * (base + 1)) + ((rank - rem) * base);
     *end = *begin + base;
   }
 }
@@ -75,10 +77,10 @@ inline int CombineGlobal(const std::vector<int> &all_info) {
   int prev_sign = 0;
   const std::size_t size = all_info.size() / 3;
 
-  for (std::size_t p = 0; p < size; ++p) {
-    const int lc = all_info[3 * p + 0];
-    const int fs = all_info[3 * p + 1];
-    const int ls = all_info[3 * p + 2];
+  for (std::size_t proc = 0; proc < size; ++proc) {
+    const int lc = all_info[(3 * proc) + 0];
+    const int fs = all_info[(3 * proc) + 1];
+    const int ls = all_info[(3 * proc) + 2];
 
     if (fs != 0) {
       if (prev_sign != 0 && fs != prev_sign) {
@@ -126,7 +128,7 @@ bool RastvorovKNumberAfCharacterAlternationsMPI::RunImpl() {
     return true;
   }
 
-  const std::size_t total = static_cast<std::size_t>(n);
+  const auto total = static_cast<std::size_t>(n);
 
   std::size_t begin = 0;
   std::size_t end = 0;
@@ -134,14 +136,14 @@ bool RastvorovKNumberAfCharacterAlternationsMPI::RunImpl() {
 
   const LocalInfo local = ProcessSegment(begin, end);
 
-  int local_info[3] = {local.count, local.first_sign, local.last_sign};
+  std::array<int, 3> local_info = {local.count, local.first_sign, local.last_sign};
 
   std::vector<int> all_info;
   if (rank == 0) {
     all_info.resize(static_cast<std::size_t>(size) * 3);
   }
 
-  MPI_Gather(local_info, 3, MPI_INT, rank == 0 ? all_info.data() : nullptr, 3, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Gather(local_info.data(), 3, MPI_INT, rank == 0 ? all_info.data() : nullptr, 3, MPI_INT, 0, MPI_COMM_WORLD);
 
   if (rank == 0) {
     GetOutput() = CombineGlobal(all_info);

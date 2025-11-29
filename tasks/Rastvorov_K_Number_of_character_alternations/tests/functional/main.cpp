@@ -66,7 +66,6 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   void SetUp() override {
     TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(
         GetParam());  // NOLINT(misc-include-cleaner)
-
     const int n_int = std::get<0>(params);
     input_data = static_cast<InType>(n_int);
     expected_output = CountAlternations(static_cast<std::size_t>(n_int));
@@ -75,7 +74,6 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   bool CheckTestOutputData(OutType &output_data) final {
     int rank = 0;
     int initialized = 0;
-
     MPI_Initialized(&initialized);
     if (initialized != 0) {
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -92,11 +90,11 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   }
 };
 
-namespace {
-
 TEST_P(RastvorovKRunFuncTestsProcesses, AlternationsCorrect) {
   ExecuteTest(GetParam());
 }
+
+namespace {
 
 const std::array<TestType, 5> kTestParam = {
     std::make_tuple(0, "n0"),   std::make_tuple(1, "n1"),   std::make_tuple(5, "n5"),
