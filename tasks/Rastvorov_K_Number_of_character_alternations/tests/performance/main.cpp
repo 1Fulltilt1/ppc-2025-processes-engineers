@@ -41,11 +41,11 @@ namespace {
 
 using ParamType = RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::ParamType;
 
-::testing::internal::ParamGenerator<ParamType> RastvorovPerf_EvalGenerator() {
+::testing::internal::ParamGenerator<ParamType> RastvorovPerfEvalGenerator() {
   return kGtestValues;
 }
 
-std::string RastvorovPerf_EvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
+std::string RastvorovPerfEvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
   return RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName(info);
 }
 
@@ -55,7 +55,7 @@ const int kRastvorovPerfDummy =
         .GetTestSuitePatternHolder<RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses>(
             "RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses",
             ::testing::internal::CodeLocation(__FILE__, __LINE__))
-        ->AddTestSuiteInstantiation("RunModeTests", &RastvorovPerf_EvalGenerator, &RastvorovPerf_EvalGenerateName,
+        ->AddTestSuiteInstantiation("RunModeTests", &RastvorovPerfEvalGenerator, &RastvorovPerfEvalGenerateName,
                                     __FILE__, __LINE__);
 
 }  // namespace

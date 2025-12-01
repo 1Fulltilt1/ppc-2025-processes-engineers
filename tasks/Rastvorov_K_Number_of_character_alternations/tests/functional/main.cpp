@@ -111,11 +111,11 @@ const auto kTestName = RastvorovKRunFuncTestsProcesses::PrintFuncTestName<Rastvo
 
 using ParamType = RastvorovKRunFuncTestsProcesses::ParamType;
 
-::testing::internal::ParamGenerator<ParamType> RastvorovFunc_EvalGenerator() {
+::testing::internal::ParamGenerator<ParamType> RastvorovFuncEvalGenerator() {
   return kGtestValues;
 }
 
-std::string RastvorovFunc_EvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
+std::string RastvorovFuncEvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
   return kTestName(info);
 }
 
@@ -124,8 +124,8 @@ const int kRastvorovFuncDummy =
         ->parameterized_test_registry()
         .GetTestSuitePatternHolder<RastvorovKRunFuncTestsProcesses>(
             "RastvorovKRunFuncTestsProcesses", ::testing::internal::CodeLocation(__FILE__, __LINE__))
-        ->AddTestSuiteInstantiation("AlternationsFuncTests", &RastvorovFunc_EvalGenerator,
-                                    &RastvorovFunc_EvalGenerateName, __FILE__, __LINE__);
+        ->AddTestSuiteInstantiation("AlternationsFuncTests", &RastvorovFuncEvalGenerator,
+                                    &RastvorovFuncEvalGenerateName, __FILE__, __LINE__);
 
 }  // namespace
 
