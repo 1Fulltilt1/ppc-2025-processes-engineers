@@ -4,7 +4,7 @@
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
 
-namespace { 
+namespace {
 
 using Rastvorov_K_Number_of_character_alternations::InType;
 using Rastvorov_K_Number_of_character_alternations::OutType;
@@ -49,11 +49,10 @@ inline int CountAlternations(std::size_t n) {
 
 TEST(AlternationsPerformance, LargeN) {
   const InType n = static_cast<InType>(10000000);
-  const OutType result =
-      static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
+  const OutType result = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_GE(result, static_cast<OutType>(0));
-  (void)result;  
+  (void)result;
 }
 
 }  // namespace

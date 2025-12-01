@@ -51,18 +51,16 @@ TEST(AlternationsFunctional, NIsZero) {
   const InType n = static_cast<InType>(0);
   const OutType expected = 0;
 
-  const OutType actual = static_cast<OutType>(
-      CountAlternations(static_cast<std::size_t>(n)));
+  const OutType actual = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_EQ(actual, expected);
 }
 
 TEST(AlternationsFunctional, SingleElement) {
   const InType n = static_cast<InType>(1);
-  const OutType expected = 0;  
+  const OutType expected = 0;
 
-  const OutType actual = static_cast<OutType>(
-      CountAlternations(static_cast<std::size_t>(n)));
+  const OutType actual = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_EQ(actual, expected);
 }
@@ -71,8 +69,7 @@ TEST(AlternationsFunctional, FiveElements) {
   const InType n = static_cast<InType>(5);
   const OutType expected = 3;
 
-  const OutType actual = static_cast<OutType>(
-      CountAlternations(static_cast<std::size_t>(n)));
+  const OutType actual = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_EQ(actual, expected);
 }
@@ -81,8 +78,7 @@ TEST(AlternationsFunctional, TenElements) {
   const InType n = static_cast<InType>(10);
   const OutType expected = 6;
 
-  const OutType actual = static_cast<OutType>(
-      CountAlternations(static_cast<std::size_t>(n)));
+  const OutType actual = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_EQ(actual, expected);
 }
@@ -91,8 +87,7 @@ TEST(AlternationsFunctional, TwentyFiveElements) {
   const InType n = static_cast<InType>(25);
   const OutType expected = 15;
 
-  const OutType actual = static_cast<OutType>(
-      CountAlternations(static_cast<std::size_t>(n)));
+  const OutType actual = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_EQ(actual, expected);
 }
