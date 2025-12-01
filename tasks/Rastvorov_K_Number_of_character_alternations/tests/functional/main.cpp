@@ -11,7 +11,7 @@
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
 #include "util/include/func_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
+namespace Rastvorov_K_Number_of_character_alternations {
 
 namespace {
 
@@ -64,7 +64,6 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   OutType expected_output{};
 
   void SetUp() override {
-    // NOLINTNEXTLINE(misc-include-cleaner)
     TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(GetParam());
     const int n_int = std::get<0>(params);
     input_data = static_cast<InType>(n_int);
@@ -110,8 +109,7 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kTestName = RastvorovKRunFuncTestsProcesses::PrintFuncTestName<RastvorovKRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(  // NOLINT
-    AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues, kTestName);
+INSTANTIATE_TEST_SUITE_P(AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues, kTestName);
 
 }  // namespace
 

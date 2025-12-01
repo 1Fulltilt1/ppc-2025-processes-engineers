@@ -4,11 +4,11 @@
 
 #include <array>
 #include <cstddef>
-#include <vector>  // NOLINT(misc-include-cleaner)
+#include <vector>
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {  // NOLINT(readability-identifier-naming)
+namespace Rastvorov_K_Number_of_character_alternations {
 
 namespace {
 
