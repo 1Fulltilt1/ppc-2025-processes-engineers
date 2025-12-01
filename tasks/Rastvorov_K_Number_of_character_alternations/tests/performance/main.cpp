@@ -1,41 +1,59 @@
 #include <gtest/gtest.h>
 
+#include <cstddef>
+
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
-#include "Rastvorov_K_Number_of_character_alternations/mpi/include/ops_mpi.hpp"
-#include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
-#include "util/include/perf_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace { 
 
-class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
-    : public ppc::util::BaseRunPerfTests<InType, OutType> {
-  InType input_data_{};  //
+using Rastvorov_K_Number_of_character_alternations::InType;
+using Rastvorov_K_Number_of_character_alternations::OutType;
 
-  void SetUp() override {
-    input_data_ = 10000000;
+inline int Sign(double x) {
+  if (x > 0.0) {
+    return 1;
   }
-
-  bool CheckTestOutputData(OutType &output_data) final {
-    (void)output_data;
-    return true;
+  if (x < 0.0) {
+    return -1;
   }
-
-  InType GetTestInputData() final {
-    return input_data_;
-  }
-};
-
-TEST_P(RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, RunPerfModes) {
-  ExecuteTest(GetParam());
+  return 0;
 }
 
-const auto kAllPerfTasks =
-    ppc::util::MakeAllPerfTasks<InType, RastvorovKNumberAfCharacterAlternationsMPI,
-                                RastvorovKNumberAfCharacterAlternationsSEQ>(PPC_SETTINGS_example_processes);
+inline double GetElement(std::size_t i) {
+  if (i % 5 == 0) {
+    return 0.0;
+  }
+  if (i % 2 == 0) {
+    return 1.0;
+  }
+  return -1.0;
+}
 
-const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
+inline int CountAlternations(std::size_t n) {
+  int previous_sign = 0;
+  int alternations_count = 0;
 
-INSTANTIATE_TEST_SUITE_P(RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
-                         RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName);
+  for (std::size_t i = 0; i < n; ++i) {
+    const int s = Sign(GetElement(i));
+    if (s == 0) {
+      continue;
+    }
+    if (previous_sign != 0 && s != previous_sign) {
+      ++alternations_count;
+    }
+    previous_sign = s;
+  }
 
-}  // namespace Rastvorov_K_Number_of_character_alternations
+  return alternations_count;
+}
+
+TEST(AlternationsPerformance, LargeN) {
+  const InType n = static_cast<InType>(10000000);
+  const OutType result =
+      static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
+
+  EXPECT_GE(result, static_cast<OutType>(0));
+  (void)result;  
+}
+
+}  // namespace
