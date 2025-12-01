@@ -48,8 +48,8 @@ inline int CountAlternations(std::size_t n) {
 }
 
 TEST(AlternationsPerformance, LargeN) {
-  const InType n = static_cast<InType>(10000000);
-  const OutType result = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
+  const auto n = static_cast<InType>(10000000);
+  const auto result = static_cast<OutType>(CountAlternations(static_cast<std::size_t>(n)));
 
   EXPECT_GE(result, static_cast<OutType>(0));
   (void)result;
