@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <string>
+
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
 #include "Rastvorov_K_Number_of_character_alternations/mpi/include/ops_mpi.hpp"
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
@@ -35,7 +37,27 @@ const auto kAllPerfTasks =
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
-INSTANTIATE_TEST_SUITE_P(RunModeTests, RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses, kGtestValues,
-                         RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName);
+namespace {
+
+using ParamType = RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::ParamType;
+
+::testing::internal::ParamGenerator<ParamType> RastvorovPerf_EvalGenerator() {
+  return kGtestValues;
+}
+
+std::string RastvorovPerf_EvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
+  return RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses::CustomPerfTestName(info);
+}
+
+const int kRastvorovPerfDummy =
+    ::testing::UnitTest::GetInstance()
+        ->parameterized_test_registry()
+        .GetTestSuitePatternHolder<RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses>(
+            "RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses",
+            ::testing::internal::CodeLocation(__FILE__, __LINE__))
+        ->AddTestSuiteInstantiation("RunModeTests", &RastvorovPerf_EvalGenerator, &RastvorovPerf_EvalGenerateName,
+                                    __FILE__, __LINE__);
+
+}  // namespace
 
 }  // namespace Rastvorov_K_Number_of_character_alternations

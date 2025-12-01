@@ -64,7 +64,7 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
   OutType expected_output{};
 
   void SetUp() override {
-    TestType params = std::get<static_cast<std::size_t>(ppc::util::GTestParamIndex::kTestParams)>(GetParam());
+    const TestType params = std::get<TestType>(GetParam());
     const int n_int = std::get<0>(params);
     input_data = static_cast<InType>(n_int);
     expected_output = CountAlternations(static_cast<std::size_t>(n_int));
@@ -109,7 +109,23 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kTestName = RastvorovKRunFuncTestsProcesses::PrintFuncTestName<RastvorovKRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(AlternationsFuncTests, RastvorovKRunFuncTestsProcesses, kGtestValues, kTestName);
+using ParamType = RastvorovKRunFuncTestsProcesses::ParamType;
+
+::testing::internal::ParamGenerator<ParamType> RastvorovFunc_EvalGenerator() {
+  return kGtestValues;
+}
+
+std::string RastvorovFunc_EvalGenerateName(const ::testing::TestParamInfo<ParamType> &info) {
+  return kTestName(info);
+}
+
+const int kRastvorovFuncDummy =
+    ::testing::UnitTest::GetInstance()
+        ->parameterized_test_registry()
+        .GetTestSuitePatternHolder<RastvorovKRunFuncTestsProcesses>(
+            "RastvorovKRunFuncTestsProcesses", ::testing::internal::CodeLocation(__FILE__, __LINE__))
+        ->AddTestSuiteInstantiation("AlternationsFuncTests", &RastvorovFunc_EvalGenerator,
+                                    &RastvorovFunc_EvalGenerateName, __FILE__, __LINE__);
 
 }  // namespace
 
