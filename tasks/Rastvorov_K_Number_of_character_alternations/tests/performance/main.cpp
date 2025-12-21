@@ -7,7 +7,7 @@
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
 #include "util/include/perf_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace rastvorov_k_number_of_character_alternations {
 
 class RastvorovKNumberAfCharacterAlternationsRunPerfTestProcesses
     : public ppc::util::BaseRunPerfTests<InType, OutType> {
@@ -60,4 +60,4 @@ const int kRastvorovPerfDummy =
 
 }  // namespace
 
-}  // namespace Rastvorov_K_Number_of_character_alternations
+}  // namespace rastvorov_k_number_of_character_alternations

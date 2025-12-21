@@ -3,7 +3,7 @@
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
 #include "task/include/task.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace rastvorov_k_number_of_character_alternations {
 
 class RastvorovKNumberAfCharacterAlternationsMPI : public BaseTask {
  public:
@@ -19,4 +19,4 @@ class RastvorovKNumberAfCharacterAlternationsMPI : public BaseTask {
   bool PostProcessingImpl() override;
 };
 
-}  // namespace Rastvorov_K_Number_of_character_alternations
+}  // namespace rastvorov_k_number_of_character_alternations

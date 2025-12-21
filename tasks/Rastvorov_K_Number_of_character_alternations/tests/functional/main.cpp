@@ -11,7 +11,7 @@
 #include "Rastvorov_K_Number_of_character_alternations/seq/include/ops_seq.hpp"
 #include "util/include/func_test_util.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace rastvorov_k_number_of_character_alternations {
 
 namespace {
 
@@ -129,4 +129,4 @@ const int kRastvorovFuncDummy =
 
 }  // namespace
 
-}  // namespace Rastvorov_K_Number_of_character_alternations
+}  // namespace rastvorov_k_number_of_character_alternations

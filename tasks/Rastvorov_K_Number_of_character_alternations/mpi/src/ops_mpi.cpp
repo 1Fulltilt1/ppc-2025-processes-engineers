@@ -8,7 +8,7 @@
 
 #include "Rastvorov_K_Number_of_character_alternations/common/include/common.hpp"
 
-namespace Rastvorov_K_Number_of_character_alternations {
+namespace rastvorov_k_number_of_character_alternations {
 
 namespace {
 
@@ -157,4 +157,4 @@ bool RastvorovKNumberAfCharacterAlternationsMPI::PostProcessingImpl() {
   return true;
 }
 
-}  // namespace Rastvorov_K_Number_of_character_alternations
+}  // namespace rastvorov_k_number_of_character_alternations
