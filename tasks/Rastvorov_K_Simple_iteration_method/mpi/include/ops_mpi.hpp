@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rastvorov_K_Simple_iteration_method/common/include/common.hpp"
+#include "task/include/task.hpp"
 
 namespace rastvorov_k_simple_iteration_method {
 

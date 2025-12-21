@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include <mpi.h>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -42,7 +44,7 @@ class RastvorovKRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
 
  protected:
   InType input_data{};
-  OutType expected_output{};
+  OutType expected_output;
 
   void SetUp() override {
     const TestType params = std::get<TestType>(GetParam());

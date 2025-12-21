@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <string>
-
 #include "Rastvorov_K_Simple_iteration_method/common/include/common.hpp"
 #include "Rastvorov_K_Simple_iteration_method/mpi/include/ops_mpi.hpp"
 #include "Rastvorov_K_Simple_iteration_method/seq/include/ops_seq.hpp"
