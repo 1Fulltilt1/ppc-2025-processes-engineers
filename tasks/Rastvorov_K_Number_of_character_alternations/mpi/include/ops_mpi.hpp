@@ -20,4 +20,3 @@ class RastvorovKNumberAfCharacterAlternationsMPI : public BaseTask {
 };
 
 }  // namespace Rastvorov_K_Number_of_character_alternations
-
