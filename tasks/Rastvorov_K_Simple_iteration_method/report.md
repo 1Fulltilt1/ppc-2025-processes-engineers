@@ -101,7 +101,7 @@ mpiexec -n 2 .\ppc_perf_tests.exe --gtest_filter=RunModeTests/RastvorovKSimpleIt
 Все тесты были успешно пройдены.
 
 ### 7.2 Performance
-ПPresent time, speedup and efficiency. Example table:
+Ниже приведены результаты измерения времени выполнения, ускорения и эффективности для последовательной (SEQ) и параллельной (MPI) реализаций.
    Pipeline
 | Processes | Time (s) | Speedup vs SEQ | Efficiency |
 |----------:|---------:|---------------:|-----------:|
