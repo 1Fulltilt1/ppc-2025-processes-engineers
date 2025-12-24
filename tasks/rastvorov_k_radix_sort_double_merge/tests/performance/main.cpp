@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <array>
 #include <bit>
 #include <cmath>
 #include <cstddef>
@@ -8,7 +9,6 @@
 
 #include "rastvorov_k_radix_sort_double_merge/common/include/common.hpp"
 #include "rastvorov_k_radix_sort_double_merge/mpi/include/ops_mpi.hpp"
-#include "rastvorov_k_radix_sort_double_merge/seq/include/ops_seq.hpp"
 #include "util/include/perf_test_util.hpp"
 
 namespace rastvorov_k_radix_sort_double_merge {
@@ -26,7 +26,7 @@ inline uint64_t DoubleToOrderedKey(double x) {
   if (std::isnan(x)) {
     return UINT64_MAX;
   }
-  const uint64_t bits = std::bit_cast<uint64_t>(x);
+  const auto bits = std::bit_cast<uint64_t>(x);
   const uint64_t sign = bits >> 63U;
   if (sign != 0U) {
     return ~bits;
@@ -42,33 +42,35 @@ void RadixSortDouble(std::vector<double> *vec) {
   }
 
   std::vector<double> out(n);
-  std::vector<uint64_t> keys(n), out_keys(n);
+  std::vector<uint64_t> keys(n);
+  std::vector<uint64_t> out_keys(n);
 
   for (std::size_t i = 0; i < n; ++i) {
     keys[i] = DoubleToOrderedKey(a[i]);
   }
 
   for (std::size_t pass = 0; pass < 8; ++pass) {
-    std::size_t count[256] = {};
+    std::array<std::size_t, 256> count{};
     const std::size_t shift = pass * 8;
 
     for (std::size_t i = 0; i < n; ++i) {
-      const unsigned byte = static_cast<unsigned>((keys[i] >> shift) & 0xFFULL);
-      ++count[byte];
+      const auto byte = static_cast<unsigned>((keys[i] >> shift) & 0xFFULL);
+      count.at(static_cast<std::size_t>(byte))++;
     }
 
-    std::size_t pos[256];
-    pos[0] = 0;
-    for (std::size_t b = 1; b < 256; ++b) {
-      pos[b] = pos[b - 1] + count[b - 1];
+    std::array<std::size_t, 256> pos{};
+    pos.at(0) = 0;
+    for (std::size_t byte_idx = 1; byte_idx < pos.size(); ++byte_idx) {
+      pos.at(byte_idx) = pos.at(byte_idx - 1) + count.at(byte_idx - 1);
     }
 
     for (std::size_t i = 0; i < n; ++i) {
-      const unsigned byte = static_cast<unsigned>((keys[i] >> shift) & 0xFFULL);
-      const std::size_t p = pos[byte]++;
+      const auto byte = static_cast<unsigned>((keys[i] >> shift) & 0xFFULL);
+      const std::size_t p = pos.at(static_cast<std::size_t>(byte))++;
       out[p] = a[i];
       out_keys[p] = keys[i];
     }
+
     a.swap(out);
     keys.swap(out_keys);
   }
@@ -92,15 +94,7 @@ class RastvorovKRadixSortDoubleMergeRunPerfTestProcesses : public ppc::util::Bas
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
-    if (output_data.size() != expected_.size()) {
-      return false;
-    }
-    for (std::size_t i = 0; i < output_data.size(); ++i) {
-      if (output_data[i] != expected_[i]) {
-        return false;
-      }
-    }
-    return true;
+    return output_data == expected_;
   }
 
   InType GetTestInputData() final {
@@ -108,15 +102,16 @@ class RastvorovKRadixSortDoubleMergeRunPerfTestProcesses : public ppc::util::Bas
   }
 
  private:
-  InType input_data_;
-  OutType expected_;
+  InType input_data_{};
+  OutType expected_{};
 };
 
 TEST_P(RastvorovKRadixSortDoubleMergeRunPerfTestProcesses, RunPerfModes) {
   ExecuteTest(GetParam());
 }
 
-const auto kAllPerfTasks = ppc::util::MakeAllPerfTasks<InType, RastvorovKRadixSortDoubleMergeMPI>(
+// MPI-only perf tasks (no seq_enabled)
+const auto kAllPerfTasks = ppc::util::MakePerfTaskTuples<RastvorovKRadixSortDoubleMergeMPI, InType>(
     PPC_SETTINGS_rastvorov_k_radix_sort_double_merge);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);

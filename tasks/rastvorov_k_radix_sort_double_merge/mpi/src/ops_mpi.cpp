@@ -9,8 +9,6 @@
 #include <cstdint>
 #include <vector>
 
-#include "rastvorov_k_radix_sort_double_merge/common/include/common.hpp"
-
 namespace rastvorov_k_radix_sort_double_merge {
 
 namespace {
