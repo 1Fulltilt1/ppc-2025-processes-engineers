@@ -102,8 +102,8 @@ class RastvorovKRadixSortDoubleMergeRunPerfTestProcesses : public ppc::util::Bas
   }
 
  private:
-  InType input_data_{};
-  OutType expected_{};
+  InType input_data_;
+  OutType expected_;
 };
 
 TEST_P(RastvorovKRadixSortDoubleMergeRunPerfTestProcesses, RunPerfModes) {
